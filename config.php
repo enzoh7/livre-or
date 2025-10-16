@@ -1,4 +1,7 @@
 <?php
+// Définir le fuseau horaire
+date_default_timezone_set('Europe/Paris');
+
 // Configuration de la base de données
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'livreor');
@@ -10,6 +13,10 @@ function getDbConnection() {
     try {
         $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8", DB_USER, DB_PASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        // Définir le fuseau horaire MySQL pour cette connexion
+        $pdo->exec("SET time_zone = '+01:00'");
+        
         return $pdo;
     } catch(PDOException $e) {
         die("Erreur de connexion à la base de données : " . $e->getMessage());
@@ -30,7 +37,6 @@ function isLoggedIn() {
 function cleanInput($data) {
     $data = trim($data);
     $data = stripslashes($data);
-    $data = htmlspecialchars($data);
     return $data;
 }
 ?>

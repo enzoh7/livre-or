@@ -24,9 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         try {
             $pdo = getDbConnection();
             
-            // Insérer le commentaire
-            $stmt = $pdo->prepare("INSERT INTO commentaires (commentaire, id_utilisateur, date) VALUES (?, ?, NOW())");
-            $stmt->execute([$commentaire, $_SESSION['user_id']]);
+            // Insérer le commentaire avec la date et l'heure actuelles
+            $dateActuelle = date('Y-m-d H:i:s');
+            $stmt = $pdo->prepare("INSERT INTO commentaires (commentaire, id_utilisateur, date) VALUES (?, ?, ?)");
+            $stmt->execute([$commentaire, $_SESSION['user_id'], $dateActuelle]);
             
             $message = "Votre commentaire a été ajouté avec succès !";
             
@@ -86,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="form-group">
                         <label for="commentaire">Votre commentaire :</label>
                         <textarea id="commentaire" name="commentaire" required rows="8"
-                                  placeholder="Partagez votre expérience, vos impressions, vos suggestions... (minimum 10 caractères)"><?php echo isset($_POST['commentaire']) ? htmlspecialchars($_POST['commentaire']) : ''; ?></textarea>
+                                  placeholder="Partagez votre expérience, vos impressions, vos suggestions... (minimum 10 caractères)"><?php echo isset($_POST['commentaire']) ? $_POST['commentaire'] : ''; ?></textarea>
                         <div class="character-counter">
                             <span id="char-count">0</span> / 1000 caractères
                             <span id="char-min">(minimum 10)</span>
